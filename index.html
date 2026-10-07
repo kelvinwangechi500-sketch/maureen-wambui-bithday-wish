@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>For Maureen Wambui — Happy Birthday</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#050611;color:#fff;overflow-x:hidden}
+body{display:flex;align-items:center;justify-content:center;padding:20px;position:relative}
+canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.glow{position:fixed;width:55vmax;height:55vmax;border-radius:50%;background:radial-gradient(circle,rgba(255,75,153,.16),transparent 68%);filter:blur(30px);top:-20vmax;right:-15vmax;z-index:0}
+.card{position:relative;z-index:2;width:min(900px,100%);min-height:680px;border:1px solid rgba(255,255,255,.14);border-radius:30px;overflow:hidden;background:linear-gradient(145deg,rgba(13,15,35,.91),rgba(5,7,18,.82));box-shadow:0 30px 100px rgba(0,0,0,.55),0 0 70px rgba(255,58,143,.08);backdrop-filter:blur(18px)}
+.boot{position:absolute;inset:0;background:#020308;display:grid;place-items:center;z-index:10;transition:opacity .8s}
+.boot.hide{opacity:0;pointer-events:none}.terminal{width:min(720px,88%);font:14px/1.8 ui-monospace,SFMono-Regular,Menlo,monospace;color:#78ffbd}.terminal .dim{color:#687082}.terminal .pink{color:#ff72b7}
+.main{padding:44px 34px 34px;display:grid;grid-template-columns:300px 1fr;gap:38px;align-items:center;min-height:680px}
+.photo-wrap{position:relative;display:flex;justify-content:center}.photo{width:280px;height:350px;object-fit:cover;border-radius:28px;border:1px solid rgba(255,255,255,.2);box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 45px rgba(255,80,160,.14);transform:rotate(-2deg)}
+.ring{position:absolute;width:300px;height:300px;border:1px solid rgba(255,105,180,.28);border-radius:50%;animation:spin 14s linear infinite;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.kicker{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:#ff8bc5;font-weight:700}.name{font-size:clamp(42px,7vw,78px);line-height:.95;margin:12px 0 18px;background:linear-gradient(90deg,#fff,#ffacd2,#ffd7e8);-webkit-background-clip:text;color:transparent}.sub{color:#c7cad8;font-size:17px;line-height:1.7;max-width:520px}.type{min-height:58px;margin:24px 0;font-size:18px;color:#fff}
+.actions{display:flex;gap:12px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:13px 19px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#ff4d9a,#9b6cff);color:#fff;box-shadow:0 10px 30px rgba(255,77,154,.2)}.btn.secondary{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.secret{margin-top:22px;padding:18px;border-radius:18px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);display:none}.secret.show{display:block;animation:up .5s ease}@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.footer{text-align:center;color:#777c91;font-size:12px;padding:0 20px 20px}
+@media(max-width:760px){.main{grid-template-columns:1fr;gap:22px;padding:32px 22px 24px;text-align:center}.photo{width:220px;height:275px}.ring{width:240px;height:240px}.sub{margin:auto}.actions{justify-content:center}.type{min-height:82px}.card{min-height:unset}}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas><div class="glow"></div>
+<div class="card">
+  <div class="boot" id="boot"><div class="terminal">
+    <div><span class="dim">[00:00:00]</span> initializing birthday protocol...</div>
+    <div><span class="dim">[00:00:01]</span> loading memories...</div>
+    <div><span class="dim">[00:00:02]</span> target detected: <span class="pink">MAUREEN WAMBUI</span></div>
+    <div><span class="dim">[00:00:03]</span> happiness module: <span class="pink">ONLINE ♥</span></div>
+    <div><span class="dim">[00:00:04]</span> birthday mode: <span class="pink">ACTIVATED</span></div>
+    <div><span class="dim">[00:00:05]</span> welcome, Maureen.</div>
+  </div></div>
+
+  <main class="main">
+    <div class="photo-wrap"><div class="ring"></div><img class="photo" src="maureen.png" alt="Maureen Wambui"></div>
+    <section>
+      <div class="kicker">A special transmission • 08.10.2026</div>
+      <h1 class="name">Happy Birthday,<br>Maureen.</h1>
+      <p class="sub">Tonight isn't just another midnight. It's the moment the world gets to celebrate the person you are. May this new chapter bring you beautiful surprises, genuine smiles, peace, and plenty of reasons to be proud of yourself.</p>
+      <div class="type" id="type"></div>
+      <div class="actions">
+        <button class="btn" id="wish">✨ Make a wish</button>
+        <button class="btn secondary" id="music">♫ Start the vibe</button>
+      </div>
+      <div class="secret" id="secret">🎂 <b>Birthday protocol complete.</b><br>May your day be brighter than every screen you've ever stared at, and may the year ahead be full of moments worth remembering. Keep shining, Maureen. ✨</div>
+    </section>
+  </main>
+  <div class="footer">crafted specially for Maureen Wambui • open at midnight ✦</div>
+</div>
+
+<script>
+const boot=document.getElementById('boot');
+setTimeout(()=>boot.classList.add('hide'),4300);
+const text="One more year. A thousand more possibilities. Happy Birthday, Maureen Wambui. 💗";
+let i=0; const type=document.getElementById('type');
+function typeIt(){if(i<text.length){type.textContent+=text[i++];setTimeout(typeIt,42)}} setTimeout(typeIt,4700);
+
+const c=document.getElementById('stars'),ctx=c.getContext('2d'); let pts=[];
+function resize(){c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);pts=Array.from({length:Math.min(130,innerWidth/7)},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.5+.3,v:Math.random()*.25+.05}))}
+addEventListener('resize',resize);resize();
+function stars(){ctx.clearRect(0,0,innerWidth,innerHeight);for(const p of pts){p.y-=p.v;if(p.y<0)p.y=innerHeight;ctx.globalAlpha=.25+Math.random()*.55;ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()}requestAnimationFrame(stars)}stars();
+
+document.getElementById('wish').onclick=()=>{document.getElementById('secret').classList.add('show'); for(let n=0;n<120;n++){let s=document.createElement('span');s.textContent=['✨','💗','🎉','⭐'][n%4];s.style.cssText=`position:fixed;left:${Math.random()*100}vw;top:${Math.random()*100}vh;font-size:${12+Math.random()*20}px;z-index:20;pointer-events:none;animation:fall ${1+Math.random()*2}s ease-out forwards`;document.body.appendChild(s);setTimeout(()=>s.remove(),3000)}}
+const st=document.createElement('style');st.textContent='@keyframes fall{0%{transform:translateY(0) scale(.7);opacity:1}100%{transform:translateY(70vh) rotate(540deg);opacity:0}}';document.head.appendChild(st);
+
+let audio=null;
+document.getElementById('music').onclick=()=>{
+ if(!audio){audio=new (window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=261.63;g.gain.value=.025;o.connect(g);g.connect(audio.destination);o.start();document.getElementById('music').textContent='♫ Vibe on';}
+};
+</script>
+</body>
+</html>
