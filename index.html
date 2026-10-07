@@ -8,7 +8,7 @@
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#050611;color:#fff;overflow-x:hidden}
 body{display:flex;align-items:center;justify-content:center;padding:20px;position:relative}
 canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0}
-.glow{position:fixed;width:55vmax;height:55vmax;border-radius:50%;background:radial-gradient(circle,rgba(255,75,153,.16),transparent 68%);filter:blur(30px);top:-20vmax;right:-15vmax;z-index:0}
+.glow{position:fixed;width:55vmax;height:55vmax;border-radius:50%;background:radial-gradient(circle,rgba(255,75,153,.16),transparent 68%);filter:blur(30px);top:-20vmax;right:-15vmax;z-index:0}.progress{position:fixed;top:0;left:0;width:0;height:3px;background:linear-gradient(90deg,#ff63bd,#67e8ff);z-index:30;box-shadow:0 0 12px #67e8ff;transition:width .5s}
 .card{position:relative;z-index:2;width:min(900px,100%);min-height:680px;border:1px solid rgba(255,255,255,.14);border-radius:30px;overflow:hidden;background:linear-gradient(145deg,rgba(13,15,35,.91),rgba(5,7,18,.82));box-shadow:0 30px 100px rgba(0,0,0,.55),0 0 70px rgba(255,58,143,.08);backdrop-filter:blur(18px)}
 .boot{position:absolute;inset:0;background:#020308;display:grid;place-items:center;z-index:10;transition:opacity .8s}
 .boot.hide{opacity:0;pointer-events:none}.terminal{width:min(720px,88%);font:14px/1.8 ui-monospace,SFMono-Regular,Menlo,monospace;color:#78ffbd}.terminal .dim{color:#687082}.terminal .pink{color:#ff72b7}
@@ -19,12 +19,13 @@ canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0}
 .kicker{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:#ff8bc5;font-weight:700}.name{font-size:clamp(42px,7vw,78px);line-height:.95;margin:12px 0 18px;background:linear-gradient(90deg,#fff,#ffacd2,#ffd7e8);-webkit-background-clip:text;color:transparent}.sub{color:#c7cad8;font-size:17px;line-height:1.7;max-width:520px}.type{min-height:58px;margin:24px 0;font-size:18px;color:#fff}
 .actions{display:flex;gap:12px;flex-wrap:wrap}.btn{border:0;border-radius:999px;padding:13px 19px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#ff4d9a,#9b6cff);color:#fff;box-shadow:0 10px 30px rgba(255,77,154,.2)}.btn.secondary{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
 .secret{margin-top:22px;padding:18px;border-radius:18px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);display:none}.secret.show{display:block;animation:up .5s ease}@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.cake{display:none;margin:24px auto 0;width:180px;height:76px;position:relative;border-radius:12px 12px 20px 20px;background:linear-gradient(#f8a6d7,#c85b9f);box-shadow:0 15px 35px rgba(255,87,174,.28)}.cake.show{display:block;animation:up .5s ease}.cake:before{content:"";position:absolute;left:0;right:0;top:0;height:30px;border-radius:50%;background:#ffe7f6;box-shadow:inset 0 -6px 0 #efb3d6}.candle{position:absolute;z-index:2;top:-34px;width:7px;height:38px;border-radius:4px;background:#8cecff}.candle:nth-child(1){left:48px}.candle:nth-child(2){left:87px}.candle:nth-child(3){left:126px}.flame{position:absolute;top:-19px;left:-4px;width:15px;height:22px;border-radius:50%;background:radial-gradient(circle at 50% 70%,#fff 0 18%,#ffe36e 20% 45%,#ff7c45 50% 100%);filter:drop-shadow(0 0 8px #ff9a3d);animation:flicker .18s infinite alternate}@keyframes flicker{to{transform:scale(.82) rotate(2deg)}}
 .footer{text-align:center;color:#777c91;font-size:12px;padding:0 20px 20px}
 @media(max-width:760px){.main{grid-template-columns:1fr;gap:22px;padding:32px 22px 24px;text-align:center}.photo{width:220px;height:275px}.ring{width:240px;height:240px}.sub{margin:auto}.actions{justify-content:center}.type{min-height:82px}.card{min-height:unset}}
 </style>
 </head>
 <body>
-<canvas id="stars"></canvas><div class="glow"></div>
+<canvas id="stars"></canvas><div class="glow"></div><div class="progress" id="progress"></div>
 <div class="card">
   <div class="boot" id="boot"><div class="terminal">
     <div><span class="dim">[00:00:00]</span> initializing birthday protocol...</div>
@@ -47,6 +48,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0}
         <button class="btn secondary" id="music">♫ Start the vibe</button>
       </div>
       <div class="secret" id="secret">🎂 <b>Birthday protocol complete.</b><br>May your day be brighter than every screen you've ever stared at, and may the year ahead be full of moments worth remembering. Keep shining, Maureen. ✨</div>
+      <div class="cake" id="cake"><div class="candle"><div class="flame"></div></div><div class="candle"><div class="flame"></div></div><div class="candle"><div class="flame"></div></div></div>
     </section>
   </main>
   <div class="footer">crafted specially for Maureen Wambui • open at midnight ✦</div>
@@ -64,12 +66,17 @@ function resize(){c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devic
 addEventListener('resize',resize);resize();
 function stars(){ctx.clearRect(0,0,innerWidth,innerHeight);for(const p of pts){p.y-=p.v;if(p.y<0)p.y=innerHeight;ctx.globalAlpha=.25+Math.random()*.55;ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()}requestAnimationFrame(stars)}stars();
 
-document.getElementById('wish').onclick=()=>{document.getElementById('secret').classList.add('show'); for(let n=0;n<120;n++){let s=document.createElement('span');s.textContent=['✨','💗','🎉','⭐'][n%4];s.style.cssText=`position:fixed;left:${Math.random()*100}vw;top:${Math.random()*100}vh;font-size:${12+Math.random()*20}px;z-index:20;pointer-events:none;animation:fall ${1+Math.random()*2}s ease-out forwards`;document.body.appendChild(s);setTimeout(()=>s.remove(),3000)}}
+document.getElementById('wish').onclick=()=>{document.getElementById('secret').classList.add('show');document.getElementById('cake').classList.add('show');document.getElementById('progress').style.width='100%'; for(let n=0;n<120;n++){let s=document.createElement('span');s.textContent=['✨','💗','🎉','⭐'][n%4];s.style.cssText=`position:fixed;left:${Math.random()*100}vw;top:${Math.random()*100}vh;font-size:${12+Math.random()*20}px;z-index:20;pointer-events:none;animation:fall ${1+Math.random()*2}s ease-out forwards`;document.body.appendChild(s);setTimeout(()=>s.remove(),3000)}}
 const st=document.createElement('style');st.textContent='@keyframes fall{0%{transform:translateY(0) scale(.7);opacity:1}100%{transform:translateY(70vh) rotate(540deg);opacity:0}}';document.head.appendChild(st);
 
-let audio=null;
+let audio=null,playing=false,timer=null;
 document.getElementById('music').onclick=()=>{
- if(!audio){audio=new (window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=261.63;g.gain.value=.025;o.connect(g);g.connect(audio.destination);o.start();document.getElementById('music').textContent='♫ Vibe on';}
+ if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();
+ if(playing){clearInterval(timer);playing=false;document.getElementById('music').textContent='♫ Start the vibe';return}
+ playing=true;document.getElementById('music').textContent='♫ Vibe on';
+ const notes=[261.63,329.63,392,329.63,293.66,349.23,440,349.23];let n=0;
+ function note(){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=notes[n++%notes.length];g.gain.setValueAtTime(0,audio.currentTime);g.gain.linearRampToValueAtTime(.035,audio.currentTime+.05);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.8);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+.85)}
+ note();timer=setInterval(note,850);
 };
 </script>
 </body>
